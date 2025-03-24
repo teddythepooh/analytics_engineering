@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: arrests
+    description: >
+      Takes relevant columns from CPD Infra's arrests and charge codes tables, then filters for index crime and drug abuse violation charges 
+      using the fbi_code column.
+    columns:
+      - name: arrest_id
+        tests:
+          - unique
+          - not_null
+
+  - name: charges
+    description: >
+      Takes relevant columns from CPD Infra's charges and charge codes tables, then filters for index crime and drug abuse violation charges 
+      using the fbi_code column.
+ 
+  - name: all_charges
+    description: >
+      Joins the arrests and charges models to obtain a charge-level table of all arrests logged in CPD Infra. In cases of like-columns, they 
+      are coalesced accordingly. For arrest_ids that only exist in the arrests table, the charge_id is imputed with 'only available in arrests table'.
+    columns:
+      - name: arrest_id
+        tests:
+          - unique:
+              config:
+                where: "charge_id = 'only available in arrests table'"
+          - not_null
+          
+  - name: charge_lookup
+    description: >
+      Lookup table for drug abuse violation charges in the all_charges model, creating different indicators based on the 
+      `charge_code_descr` column. This is by far the most critical model here: it offers a formal mechanism to delineate across over 
+      400 different drug charges.
+    columns:
+      - name: charge_code_descr
+        tests:
+          - unique
+          - relationships:
+              to: ref('all_charges')
+              field: charge_code_descr
+              
+  - name: arrest_level_table
+    description: >
+      Takes the all_charges model, then collapses it to the arrest-level and counts the number of charges per arrest using
+      the indicators produced in the charge_lookup model.
+    columns:
+      - name: arrest_id
+        tests:
+          - unique
+          - not_null
+
+  - name: analytical_table
+    description: >
+      Takes the arrest_level_table model and integrates demographic information from the arrests model.
+    columns:
+      - name: age_at_arrest_date
+        tests:
+          - positive
+
+  - name: citywide_aggregation
+    description: >
+      Collapses the analytical_table model to the citywide level. In this model, I also tally the number of drug-related and drug possession arrests where 
+      they were the primary charge. There does not exist an established hierarchy of non-index crimes, so the primary charge designation is 
+      dependent strictly on whether the arrest has an associated index crime charge.
