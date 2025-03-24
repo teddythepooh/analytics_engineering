@@ -4,16 +4,17 @@ WITH charge_level AS (
         cl.arrest_date,
         cl.arrest_month,
         cl.arrest_year,
+    
+        cl.charge_code_descr,
         cl.drug_related_crime_ind,
         cl.index_crime_ind,
-        cl.charge_code_descr,
 
         cc.intent_to_sell_manuf_deliv_or_distrib_ind,
         cc.possession_ind,
         cc.unknown_substance_possession_ind,
         cc.opioid_ind,
         cc.marijuana_ind
-    FROM {{ ref('charge_level_table') }} cl
+    FROM {{ ref('all_charges') }} cl
     LEFT JOIN {{ ref('charge_lookup') }} cc ON cl.charge_code_descr = cc.charge_code_descr
 )
 SELECT

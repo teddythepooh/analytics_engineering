@@ -1,6 +1,6 @@
 WITH drug_charges AS (
     SELECT charge_code_descr, COUNT(*) as num_charges
-    FROM {{ ref('charge_level_table') }}
+    FROM {{ ref('all_charges') }}
     WHERE drug_related_crime_ind = 1
     GROUP BY charge_code_descr
     ORDER BY num_charges DESC
