@@ -3,9 +3,9 @@ cpd_infra:
   outputs:
     dev:
       type: postgres
-      host: ulpgdev03
+      host: "{{ env_var('DBT_HOST') }}"
       user: "{{ env_var('DBT_USER') }}"
       password: "{{ env_var('DBT_PASSWORD') }}" 
-      dbname: cpd_infra_dev
+      dbname: "{{ env_var('DBT_DBNAME') }}"
       schema: ted_work
       port: 5432
