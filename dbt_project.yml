@@ -7,8 +7,6 @@ profile: 'cpd_infra'
 vars:
   start_year: 2000
   end_year: 2024
-  include_ir_no_in_analytical_table: False
-  include_arrestee_names_in_analytical_table: False
   unknown_drug_poss_charges:
     - 'POSSESSION OF A CONTROLLED SUBSTANCE'
     - 'POSSESS CONTROLLED SUBSTANCE'
@@ -18,6 +16,20 @@ vars:
     - 'ATTEMPT (POSS CONTROLLED SUBSTANCE <15 GR)'
     - 'ATTEMPT (POSS CONTROLLED SUBSTANCE >15 GRAMS)'
     - 'POSSESSION OF OTHER CONTROLLED SUBSTANCE'
+  index_crime_fbi_codes:
+    - '01A'
+    - '01B'
+    - '2'
+    - '3'
+    - '04A'
+    - '04B'
+    - '5'
+    - '6'
+    - '7'
+    - '08A'
+    - '08B'
+    - '9'
+  drug_crime_fbi_code: '18'
 
 # These configurations specify where dbt should look for different types of files.
 model-paths: ["models"]
