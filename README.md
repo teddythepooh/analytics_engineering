@@ -1,5 +1,5 @@
 ### About
-These are the preliminary data models I am developing to systematically increase the granularity of drug violation arrests observed in the University of Chicago Crime Lab's Chicago PD Data Infrastructure (CPD Infra).
+These are the data models I am developing to systematically increase the granularity of drug violation arrests observed in the University of Chicago Crime Lab's Chicago PD Data Infrastructure (CPD Infra).
 
 ### Requirements
 1. `requirements.yml`
