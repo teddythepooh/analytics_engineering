@@ -1,0 +1,24 @@
+db_credentials:
+  port: 5432
+  host: ulpgdev03
+  database: cpd_infra_dev
+  schema: ted_work
+
+color_map:
+  num_drug_related_arrests: "#3EB1C8"
+  num_drug_related_arrests_as_primary_charge: "#EAAA00"
+  num_drug_poss: "#275D38"
+  num_drug_poss_as_primary_charge: "#007396"
+  num_opioid_related_arrests: "#59315F"
+  num_opioid_poss: "#A6A6A6"
+  num_unknown_drug_poss: "red"
+  num_marijuana_related_arrests: "brown"
+  num_marijuana_poss: "pink"
+
+desired_counts:
+  - num_drug_related_arrests
+  - num_drug_related_arrests_as_primary_charge
+  - num_drug_poss
+  - num_drug_poss_as_primary_charge
+  - num_opioid_related_arrests
+  - num_opioid_poss
