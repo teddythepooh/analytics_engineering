@@ -1,0 +1,16 @@
+name: geocoder_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7.12
+  - pip=24.0
+  - pip:
+      - geopandas==0.10.2
+      - rtree==1.0.1 # This dependency is required by geopandas when using the same ul_geocoder env to do spatial joins.
+      - matplotlib==3.5.3
+      - pandas==1.3.5
+      - numpy==1.21.6
+      - pyyaml==6.0.1
+      - shapely==2.0.7
+      - git+ssh://git@urbangitlab.uchicago.edu/cel_tools/ul_geocoder.git #I was using v2.0.1, not that it matters too much.

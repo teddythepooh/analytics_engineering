@@ -7,8 +7,8 @@ WITH arrests AS (
         race_code_cd AS race,
         sex_code_cd AS sex,
 
-        CONCAT(o_street_no, ' ', o_street_nme, ' ', o_city, ' ', o_state_cd, ' ', o_zip_cd) AS home_address,
-        CONCAT(street_no, ' ', street_nme, ' ', city, ' ', o_state_cd, ' ' , zip_cd) AS arrest_address,
+        CONCAT(o_street_no, ' ', o_street_direction_cd, ' ', o_street_nme, ' ', o_city, ' ', o_state_cd, ' ', o_zip_cd) AS home_address,
+        CONCAT(street_no, ' ', street_direction_cd, ' ', street_nme, ' ', city, ' ', state_cd, ' ' , zip_cd) AS arrest_address,
 
         cel_arrest_date::date AS arrest_date,
         DATE_PART('month', cel_arrest_date) AS arrest_month,

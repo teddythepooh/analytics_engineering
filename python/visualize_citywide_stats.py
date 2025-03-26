@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import argparse
 
-from utils import Postgres, load_yaml, build_db_credentials
+from utils import Postgres, load_yaml
 
 def main(args: argparse.Namespace):
     config = load_yaml(Path(args.config_file))
@@ -52,8 +52,8 @@ def main(args: argparse.Namespace):
     )
     
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from the CPD Infra database.")
-    parser.add_argument("--config_file", help = ".yml file with db_credentials, color_map, and desired_counts keys", default = "./python/plot.yml")
+    parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from the CPD Infra.")
+    parser.add_argument("--config_file", help = ".yml file with db_credentials, color_map, and desired_counts keys", default = "./python/config.yml")
     
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
     parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 50000)
