@@ -22,3 +22,19 @@ desired_counts:
   - num_drug_poss_as_primary_charge
   - num_opioid_related_arrests
   - num_opioid_poss
+
+expanded_query_params:
+  # Each key under this should be an existing dbt model that has been materialized in the schema.
+  analytical_table:
+    col_filter:
+      - arrest_id
+      - arrest_year
+      - arrest_district
+      - arrest_address
+      - num_opioid_related_charges
+      - num_opioid_poss_charges
+    row_filter:
+      key: arrest_district
+      values:
+        - 11
+        - 12

@@ -13,14 +13,10 @@ def load_yaml(file: Path) -> dict:
     except FileNotFoundError:
         raise FileNotFoundError(f"{file} not found.")
 
-def build_db_credentials(port, host, database) -> dict:
-    return {
-        "port": port,
-        "host": host,
-        "database": database
-    }
-
 class Postgres:
+    '''
+    This is an interface to query my materialized dbt models from CPD Infra onto Python as pandas dataframes.
+    '''
     def __init__(self, 
                  credentials: dict, 
                  schema: list, 
@@ -61,18 +57,48 @@ class Postgres:
     
     def query_table(self, table: str, cols_to_query: list = "*") -> pd.DataFrame:
         '''
-        table: desired table in schema.
+        table: desired table in schema
         cols_to_query (optional): desired columns in table
         
         Queries table in schema. pandas returns a UserWarning if I pass a direct db connection (psycopg2), 
         hence why I am using a SQLAlchemy engine here.
         '''
-        if cols_to_query == "*":
-            cols = cols_to_query
-        else:
-            cols = ", ".join(cols_to_query)
+        select_clause = ", ".join(cols_to_query) if cols_to_query else "*"
         
-        result = pd.read_sql(f"SELECT {cols} FROM {self.schema}.{table}", 
+        query = f"SELECT {select_clause} FROM {self.schema}.{table}"
+        
+        result = pd.read_sql(query, 
                              con = self.create_sqlalchemy_engine())
         
+        return result
+    
+    def query_table_expanded(self, table: str, col_filter: list, row_filter: dict) -> pd.DataFrame:
+        '''
+        table: desired table in schema
+        col_filter: list [c_i] of relevant cols c in table
+        row_filter: one-element dict {'k': [v_i]} with the key as a column in table and the value is a list of desired values
+        
+        If [v_i] is a list of strings, each element must be single-quoted.
+        
+        Queries a table in schema as such:
+        
+        SELECT c_1, c_2, . . . 
+        FROM table
+        WHERE k IN (v_1, v2, . . .)
+        '''
+        select_clause = ", ".join(col_filter) if col_filter else "*"
+
+        col = list(row_filter.keys())[0]
+        values_comma_separated = ", ".join(f"{i}" for i in row_filter[col])
+        where_clause = f"{col} IN ({values_comma_separated})"
+
+        query = f'''
+            SELECT {select_clause}
+            FROM {self.schema}.{table}
+            WHERE ({where_clause})
+        '''
+        
+        result = pd.read_sql(query, 
+                             con = self.create_sqlalchemy_engine())
+
         return result
