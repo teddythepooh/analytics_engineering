@@ -1,6 +1,10 @@
 SELECT
+    COALESCE(c.ingestion_date, a.ingestion_date) AS ingestion_date,
+    COALESCE(c.ingestion_year, a.ingestion_year) AS ingestion_year,
+
     COALESCE(c.charge_id::text, 'only available in arrests table') AS charge_id,
     COALESCE(c.arrest_id, a.arrest_id) AS arrest_id,
+
     COALESCE(c.arrest_date, a.arrest_date) AS arrest_date,
     DATE_PART('month', COALESCE(c.arrest_date, a.arrest_date)) AS arrest_month,
     DATE_PART('year', COALESCE(c.arrest_date, a.arrest_date)) AS arrest_year,

@@ -1,9 +1,11 @@
 WITH charges AS (
     SELECT
+        lc.cel_ingested_on::date AS ingestion_date,
+        DATE_PART('year', lc.cel_ingested_on) AS ingestion_year,
         lc.arrest_id,
-        lc.cel_arrest_date::date as arrest_date,
-        DATE_PART('month', lc.cel_arrest_date) as arrest_month,
-        DATE_PART('year', lc.cel_arrest_date) as arrest_year,
+        lc.cel_arrest_date::date AS arrest_date,
+        DATE_PART('month', lc.cel_arrest_date) AS arrest_month,
+        DATE_PART('year', lc.cel_arrest_date) AS arrest_year,
         lc.id AS charge_id,
         lc.charge_code_id,
 

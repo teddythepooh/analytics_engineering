@@ -1,5 +1,7 @@
 WITH arrests AS (
     SELECT
+        la.cel_ingested_on::date AS ingestion_date,
+        DATE_PART('year', la.cel_ingested_on) AS ingestion_year,
         arrest_id,
         cel_birth_date::date AS dob,
         race_code_cd AS race,
