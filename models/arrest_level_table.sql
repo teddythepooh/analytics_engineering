@@ -10,6 +10,7 @@ WITH charge_level AS (
         cl.index_crime_ind,
 
         cc.intent_to_sell_manuf_deliv_or_distrib_ind,
+        cc.paraphernalia_ind,
         cc.possession_ind,
         cc.unknown_substance_possession_ind,
         cc.opioid_ind,
@@ -28,7 +29,8 @@ SELECT
 
     SUM(CASE WHEN 
             possession_ind = 1 
-            AND intent_to_sell_manuf_deliv_or_distrib_ind = 0 
+            AND intent_to_sell_manuf_deliv_or_distrib_ind = 0
+            AND paraphernalia_ind = 0
         THEN 1 ELSE 0 END) AS num_drug_poss_charges,
 
     SUM(CASE WHEN 
@@ -38,7 +40,7 @@ SELECT
     SUM(CASE WHEN 
             possession_ind = 1 
             AND opioid_ind = 1
-            AND intent_to_sell_manuf_deliv_or_distrib_ind = 0 
+            AND intent_to_sell_manuf_deliv_or_distrib_ind = 0
         THEN 1 ELSE 0 END) AS num_opioid_poss_charges,
 
     SUM(CASE WHEN 
