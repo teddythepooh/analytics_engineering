@@ -44,19 +44,17 @@ def main(args: argparse.Namespace):
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents = True, exist_ok = True)
     
-    citywide_agg.to_csv(output_dir.joinpath("citywide_aggregation.csv"), index = False)
-    plt.savefig(
-        output_dir.joinpath(
-        f"drug_arrests_over_time_{citywide_agg.arrest_year.min()}-{citywide_agg.arrest_year.max()}.png"
-        )
-    )
+    file_name = f"citywide_aggregation_{citywide_agg.arrest_year.min()}-{citywide_agg.arrest_year.max()}"
+    
+    citywide_agg.to_csv(output_dir.joinpath(f"{file_name}.csv"), index = False)
+    plt.savefig(output_dir.joinpath(f"{file_name}.png"))
     
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from the CPD Infra.")
+    parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from CPD Infra.")
     parser.add_argument("--config_file", help = ".yml file with db_credentials, color_map, and desired_counts keys", default = "./python/config.yml")
     
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
-    parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 50000)
+    parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 65000)
     parser.add_argument("--y_ticks", help = "y axis tick of plot", type = int, default = 5000)
     
     parser.add_argument("--output_dir", default = "output")
