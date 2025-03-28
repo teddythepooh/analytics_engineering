@@ -5,6 +5,7 @@ db_credentials:
   schema: ted_work
 
 color_map:
+  # These hex codes come from the University of Chicago Crime Lab's style guide.
   num_drug_related_arrests: "#3EB1C8"
   num_drug_related_arrests_as_primary_charge: "#EAAA00"
   num_drug_poss: "#275D38"
@@ -22,6 +23,7 @@ desired_counts:
   - num_drug_poss_as_primary_charge
   - num_opioid_related_arrests
   - num_opioid_poss
+  - num_unknown_drug_poss
 
 expanded_query_params:
   # Each key under this should be an existing dbt model that has been materialized in the schema.
@@ -31,6 +33,7 @@ expanded_query_params:
       - arrest_year
       - arrest_district
       - arrest_address
+      - home_address
       - num_opioid_related_charges
       - num_opioid_poss_charges
     row_filter:

@@ -12,7 +12,11 @@ SELECT
     THEN 1 ELSE 0 END AS intent_to_sell_manuf_deliv_or_distrib_ind,
     
     CASE WHEN
-        charge_code_descr ILIKE ANY (ARRAY['%PCS%', '%POSS%'])
+        charge_code_descr ILIKE '%PARAPHERNALIA%' OR charge_code_descr = 'POSSESS HYPO/SYRINGE/NEEDLES'
+    THEN 1 ELSE 0 END AS paraphernalia_ind,
+    
+    CASE WHEN
+        charge_code_descr ILIKE ANY (ARRAY['%PCS%', '%POSS%', 'POSESS'])
     THEN 1 ELSE 0 END AS possession_ind,
     
     CASE WHEN

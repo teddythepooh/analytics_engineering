@@ -21,6 +21,12 @@ models:
       Joins the arrests and charges models to obtain a charge-level table of all arrests logged in CPD Infra. In cases of like-columns, they 
       are coalesced accordingly. For arrest_ids that only exist in the arrests table, the charge_id is imputed with 'only available in arrests table'.
     columns:
+      - name: charge_id
+        tests:
+          - unique:
+              config:
+                where: "charge_id != 'only available in arrests table'"
+          - not_null
       - name: arrest_id
         tests:
           - unique:
