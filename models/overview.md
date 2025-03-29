@@ -1,5 +1,5 @@
 {% docs __overview__ %}
-These data models aim to systematically increase the granularity of drug violation arrests observed in the CPD Data Infrastructure (CPD Infra). Presently, this fulfills a data request from the Above and Beyond Family Recovery Center: identify historical opioid possession arrests in Chicago at the citywide and community area levels (East and West Garfield Park).
+These data models aim to systematically increase the granularity of drug violation arrests in CPD Infra. Presently, this fulfills a data request from a substance abuse center in preparation for a quasi-experimental study: identify historical opioid possession arrests in Chicago at the citywide and community area levels (East and West Garfield Park).
 
 1. `arrests` takes relevant columns from CPD Infra's arrests and charge codes tables, then filters for index crime and drug abuse violation charges using the `fbi_code` column.
 1. `charges` takes relevant columns from CPD Infra's charges and charge codes tables, then filters for index crime and drug abuse violation charges using the `fbi_code` column.
