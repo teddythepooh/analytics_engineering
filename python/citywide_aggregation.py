@@ -14,30 +14,29 @@ def main(args: argparse.Namespace):
 
     citywide_agg = db.query_table("citywide_aggregation")
     citywide_agg["arrest_year"] = citywide_agg["arrest_year"].astype(int)
-    
-    num_cols = [cols for cols in citywide_agg.columns if cols in config["desired_counts"]]
-    plot_labels = [(cols.replace("num", "").replace("_", " ").replace("poss", "possession arrests")
-                    .strip().title()) 
-                   for cols in num_cols
-                  ]
-    citywide_agg.rename(columns = {old: new for old, new in zip(num_cols, plot_labels)}, inplace = True)
-    
+
     if args.start_year:
         citywide_agg.query(f"arrest_year >= {args.start_year}", inplace = True)
-
-
+    
+    
     # Step 2: Plot.
-    plt.figure(figsize = (10, 6))
-    for col, original_colname in zip(plot_labels, num_cols):
-        plt.plot(citywide_agg["arrest_year"], citywide_agg[col], 
-                 marker = 'o', label = col, color = config["color_map"][original_colname]
-                )
+    if set(config["color_map"].keys()) != set(config["column_map"].keys()):
+        raise ValueError(f"Invalid column_map and color_map in {args.config_file}. "
+                         "Their keys must be the same. No, I don't know why I "
+                         "set this up differently in ./geocoder/garfield_park.py.")
+    else:
+        citywide_agg.rename(columns = config["column_map"], inplace = True)
 
-    plt.title("Drug Arrests Over Time", fontsize = 15, fontweight = "bold")
-    plt.yticks(range(0, args.max_y + args.y_ticks, args.y_ticks))
-    plt.xticks(range(min(citywide_agg["arrest_year"]), max(citywide_agg["arrest_year"]) + 1), rotation = 30)
-    plt.legend(loc = "upper right", fontsize = 9)
-    plt.tight_layout()
+        plt.figure(figsize = (10, 6))
+        for original_colname, plot_label in config["column_map"].items():
+            plt.plot(citywide_agg["arrest_year"], citywide_agg[plot_label], 
+                     marker = "o", label = plot_label, color = config["color_map"][original_colname])
+
+        plt.title("Drug Arrests Over Time", fontsize = 15, fontweight = "bold")
+        plt.yticks(range(0, args.max_y + args.y_ticks, args.y_ticks))
+        plt.xticks(range(min(citywide_agg["arrest_year"]), max(citywide_agg["arrest_year"]) + 1), rotation = 30)
+        plt.legend(loc = "upper right", fontsize = 9)
+        plt.tight_layout()
     
     
     # Step 3: Export.
@@ -51,7 +50,9 @@ def main(args: argparse.Namespace):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from CPD Infra.")
-    parser.add_argument("--config_file", help = ".yml file with db_credentials, color_map, and desired_counts keys", default = "./python/config.yml")
+    parser.add_argument("--config_file", 
+                        help = ".yml file with db_credentials, column_map, and color_map keys", 
+                        default = "./python/config.yml")
     
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
     parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 65000)

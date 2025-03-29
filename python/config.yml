@@ -4,29 +4,31 @@ db_credentials:
   database: cpd_infra_dev
   schema: ted_work
 
-color_map:
-  # These hex codes come from the University of Chicago Crime Lab's style guide.
-  num_drug_related_arrests: "#3EB1C8"
-  num_drug_related_arrests_as_primary_charge: "#EAAA00"
+column_map:
+  #num_drug_related_arrests: Drug Related Arrests
+  #num_drug_related_arrests_as_primary_charge: Drug Related Arrests As Primary Charge
+  num_drug_poss: Drug Possession Arrests
+  num_drug_poss_as_primary_charge: Drug Possession Arrests As Primary Charge
+  num_drug_poss_ex_marijuana_and_opioid: Drug Possession Arrests Ex Marijuana And Opioid
+  #num_marijuana_related_arrests: Marijuana Related Arrests
+  num_marijuana_poss: Marijuana Possession Arrests
+  #num_opioid_related_arrests: Opioid Related Arrests
+  num_opioid_poss: Opioid Possession Arrests
+  num_unknown_drug_poss: Unknown Drug Possession Arrests
+
+color_map: # These hex codes originate from the University of Chicago Crime Lab's style guide.
+  #num_drug_related_arrests: "#3EB1C8"
+  #num_drug_related_arrests_as_primary_charge: "#EAAA00"
   num_drug_poss: "#275D38"
   num_drug_poss_as_primary_charge: "#007396"
-  num_opioid_related_arrests: "#59315F"
+  num_drug_poss_ex_marijuana_and_opioid: "orange"
+  #num_marijuana_related_arrests: "brown"
+  num_marijuana_poss: "pink"
+  #num_opioid_related_arrests: "#59315F"
   num_opioid_poss: "#A6A6A6"
   num_unknown_drug_poss: "red"
-  num_marijuana_related_arrests: "brown"
-  num_marijuana_poss: "pink"
 
-desired_counts:
-  - num_drug_related_arrests
-  - num_drug_related_arrests_as_primary_charge
-  - num_drug_poss
-  - num_drug_poss_as_primary_charge
-  - num_opioid_related_arrests
-  - num_opioid_poss
-  - num_unknown_drug_poss
-
-expanded_query_params:
-  # Each key under this should be an existing dbt model that has been materialized in the schema.
+expanded_query_params: # Each key should be an existing dbt model that has been materialized in the schema above.
   analytical_table:
     col_filter:
       - arrest_id
