@@ -51,7 +51,7 @@ python $db_query_script \
 
 
 # Step 4. Geocode, then map point coordinates to the community area.
-if [[ $run_geocoder == 'True' ]]; then
+if [[ $run_geocoder == "True" ]]; then
     conda deactivate
     conda activate geocoder_env # ./requirements_geocoder.yml
 
