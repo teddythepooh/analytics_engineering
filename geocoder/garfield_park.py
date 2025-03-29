@@ -29,7 +29,7 @@ def plot_by_year(table: pd.DataFrame, column_map: dict, color_map: dict,
     plt.figure(figsize = (10, 6))
     for col in column_map.values():
         plt.plot(summary_for_plot[year_col], summary_for_plot[col], 
-                 marker='o', label = col, color = color_map[col])
+                 marker = "o", label = col, color = color_map[col])
     
     plt.title(title, fontsize = 15, fontweight = "bold")
     plt.xticks(range(min(summary_for_plot[year_col]), max(summary_for_plot[year_col]) + 1), rotation = 30)
