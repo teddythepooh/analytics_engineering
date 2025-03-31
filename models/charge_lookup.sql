@@ -8,7 +8,7 @@ WITH drug_charges AS (
 SELECT
     *,
     CASE WHEN 
-        charge_code_descr ILIKE ANY (ARRAY['%MAN/DEL%', '%MFG%', '%DEL%', '%SELL%', '%SALE%', '%MANU%', '%DISTRIB%', '%PRODUCE%'])
+        charge_code_descr ILIKE ANY (ARRAY['%MAN/DEL%', '%MFG%', '%DEL%', '%SELL%', '%SALE%', '%MANU%', '%DISTRIB%', '%PRODUCE%', '%TRAFFICK%'])
     THEN 1 ELSE 0 END AS intent_to_sell_manuf_deliv_or_distrib_ind,
     
     CASE WHEN
@@ -16,7 +16,7 @@ SELECT
     THEN 1 ELSE 0 END AS paraphernalia_ind,
     
     CASE WHEN
-        charge_code_descr ILIKE ANY (ARRAY['%PCS%', '%POSS%', 'POSESS'])
+        charge_code_descr ILIKE ANY (ARRAY['%PCS%', '%POSS%', '%POSESS%'])
     THEN 1 ELSE 0 END AS possession_ind,
     
     CASE WHEN

@@ -4,6 +4,7 @@ import geopandas as gp
 from shapely.geometry import Point
 import argparse
 from pathlib import Path
+import yaml
 
 from utils import create_logger
 
@@ -11,7 +12,7 @@ garfield_park = ["WEST GARFIELD PARK", "EAST GARFIELD PARK"]
 
 def plot_by_year(table: pd.DataFrame, column_map: dict, color_map: dict, 
                  year_col: str = "arrest_year",
-                 title: str = "Opioid Arrests in Garfield Park Over Time"):
+                 title: str = "Drug Arrests in Garfield Park Over Time"):
     '''
     table: table to plot with a year column
     column_map: key:value pair where key is a column in table and value is the desired name in plot
@@ -71,15 +72,26 @@ def main(args: argparse.Namespace):
     
     
     # Step 2: Aggregate to the year level, tallying the number of opioid related and opioid possession arrests in East and West Garfield Park.
-    table_out = pd.DataFrame(map_table_to_shp)
+    table_out = pd.DataFrame(map_table_to_shp).query("community in @garfield_park")
 
     summary = (table_out
-              .query("community in @garfield_park")
-              .groupby("arrest_year")
-              .agg(num_opioid_related_arrests=("num_opioid_related_charges", lambda x: (x > 0).sum()),
-                   num_opioid_poss_arrests=("num_opioid_poss_charges", lambda x: (x > 0).sum()))
-              .reset_index()
+               .groupby("arrest_year")
+               .agg(
+                   num_drug_poss = ("num_drug_poss_charges", lambda x: (x > 0).sum()),
+                   num_marijuana_poss = ("num_marijuana_poss_charges", lambda x: (x > 0).sum()),
+                   num_opioid_poss = ("num_opioid_poss_charges", lambda x: (x > 0).sum()),
+                   num_unknown_drug_poss = ("num_unknown_poss_charges", lambda x: (x > 0).sum()),
+                   num_drug_poss_ex_marijuana_opioid_and_unknown_substances = (
+                       "num_drug_poss_charges",
+                       lambda x: ((x > 0) & 
+                                  (table_out["num_marijuana_poss_charges"] == 0) & 
+                                  (table_out["num_opioid_poss_charges"] == 0) & 
+                                  (table_out["num_unknown_poss_charges"] == 0)).sum()
+                   )
+               )
+               .reset_index()
               )
+
     summary["arrest_year"] = summary["arrest_year"].astype(int)
     
     
@@ -88,14 +100,11 @@ def main(args: argparse.Namespace):
 
     if args.start_year:
         summary_for_plot.query(f"arrest_year >= {args.start_year}", inplace = True)
+        
+    with open(args.config_file, "r") as file:
+        config = yaml.safe_load(file)
 
-    plot_by_year(
-        summary_for_plot, 
-        column_map = {"num_opioid_related_arrests": "Opioid Related Arrests",
-                      "num_opioid_poss_arrests": "Opioid Possession Arrests"}, 
-        color_map = {"Opioid Related Arrests": "red",
-                     "Opioid Possession Arrests": "blue"}
-    )
+    plot_by_year(summary_for_plot, column_map = config["column_map"], color_map = config["color_map"])
     
     
     # Step 4: Export arrest-level table, year-level table, and year-level visualization.
@@ -108,9 +117,12 @@ def main(args: argparse.Namespace):
         ["ul_lon", "ul_lat", "geometry", "community"]
     ]
     
-    table_out[table_out_relevant_cols].to_csv(output_dir.joinpath("analytical_table_spatially_joined.csv"), index = False)
-    summary.to_csv(output_dir.joinpath("garfield_park_opioid_arrests.csv"), index = False)
-    plt.savefig(output_dir.joinpath(f"garfield_park_opioid_arrests_{summary_for_plot.arrest_year.min()}-{summary_for_plot.arrest_year.max()}.png"))
+    base_name = "garfield_park_arrests"
+    plot_name = f"{base_name}_{summary_for_plot.arrest_year.min()}-{summary_for_plot.arrest_year.max()}.png"
+    
+    table_out[table_out_relevant_cols].to_csv(output_dir.joinpath(f"{base_name}.csv"), index = False)
+    summary.to_csv(output_dir.joinpath(f"{base_name}_summary.csv"), index = False)
+    plt.savefig(output_dir.joinpath(f"{plot_name}.png"))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -120,6 +132,10 @@ if __name__ == "__main__":
         "table; and year-level visualization are exported."
     )
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
+    
+    parser.add_argument("--config_file",
+                        help = ".yml file with column_map and color_map keys",
+                        default = "./geocoder/config.yml")
     
     parser.add_argument("--analytical_table", "-a",
                         help = ".csv file from ./python/query_table_from_db.py --table=analytical_table")

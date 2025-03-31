@@ -14,10 +14,6 @@ def main(args: argparse.Namespace):
 
     citywide_agg = db.query_table("citywide_aggregation")
     citywide_agg["arrest_year"] = citywide_agg["arrest_year"].astype(int)
-
-    if args.start_year:
-        citywide_agg.query(f"arrest_year >= {args.start_year}", inplace = True)
-    
     
     # Step 2: Plot.
     if set(config["color_map"].keys()) != set(config["column_map"].keys()):
@@ -25,16 +21,20 @@ def main(args: argparse.Namespace):
                          "Their keys must be the same. No, I don't know why I "
                          "set this up differently in ./geocoder/garfield_park.py.")
     else:
-        citywide_agg.rename(columns = config["column_map"], inplace = True)
+        citywide_agg_for_plot = citywide_agg.copy()
+        if args.start_year:
+            citywide_agg_for_plot.query(f"arrest_year >= {args.start_year}", inplace = True)
+            
+        citywide_agg_for_plot.rename(columns = config["column_map"], inplace = True)
 
         plt.figure(figsize = (10, 6))
         for original_colname, plot_label in config["column_map"].items():
-            plt.plot(citywide_agg["arrest_year"], citywide_agg[plot_label], 
+            plt.plot(citywide_agg_for_plot["arrest_year"], citywide_agg_for_plot[plot_label], 
                      marker = "o", label = plot_label, color = config["color_map"][original_colname])
 
-        plt.title("Drug Arrests Over Time", fontsize = 15, fontweight = "bold")
+        plt.title("Citywide Drug Arrests Over Time", fontsize = 15, fontweight = "bold")
         plt.yticks(range(0, args.max_y + args.y_ticks, args.y_ticks))
-        plt.xticks(range(min(citywide_agg["arrest_year"]), max(citywide_agg["arrest_year"]) + 1), rotation = 30)
+        plt.xticks(range(min(citywide_agg_for_plot["arrest_year"]), max(citywide_agg_for_plot["arrest_year"]) + 1), rotation = 30)
         plt.legend(loc = "upper right", fontsize = 9)
         plt.tight_layout()
     
@@ -43,10 +43,11 @@ def main(args: argparse.Namespace):
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents = True, exist_ok = True)
     
-    file_name = f"citywide_aggregation_{citywide_agg.arrest_year.min()}-{citywide_agg.arrest_year.max()}"
+    base_name = "citywide_arrests"
+    plot_name = f"{base_name}_{citywide_agg_for_plot.arrest_year.min()}-{citywide_agg_for_plot.arrest_year.max()}.png"
     
-    citywide_agg.to_csv(output_dir.joinpath(f"{file_name}.csv"), index = False)
-    plt.savefig(output_dir.joinpath(f"{file_name}.png"))
+    citywide_agg.to_csv(output_dir.joinpath(f"{base_name}.csv"), index = False)
+    plt.savefig(output_dir.joinpath(f"{plot_name}.png"))
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Queries and visualizes the citywide_aggregation model from CPD Infra.")
