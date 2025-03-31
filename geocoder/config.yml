@@ -1,0 +1,13 @@
+column_map:
+  num_drug_poss: Drug Possession Arrests
+  num_drug_poss_ex_marijuana_opioid_and_unknown_substances: Drug Possession Arrests Ex Marijuana, Opioid, Unknown
+  num_marijuana_poss: Marijuana Possession Arrests
+  num_opioid_poss: Opioid Possession Arrests
+  num_unknown_drug_poss: Unknown Drug Possession Arrests
+
+color_map:
+  Drug Possession Arrests: "#275D38"
+  Drug Possession Arrests Ex Marijuana, Opioid, Unknown: "#3EB1C8"
+  Marijuana Possession Arrests: "pink"
+  Opioid Possession Arrests: "#A6A6A6"
+  Unknown Drug Possession Arrests: "red"

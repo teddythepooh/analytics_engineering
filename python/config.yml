@@ -8,8 +8,9 @@ column_map:
   #num_drug_related_arrests: Drug Related Arrests
   #num_drug_related_arrests_as_primary_charge: Drug Related Arrests As Primary Charge
   num_drug_poss: Drug Possession Arrests
-  num_drug_poss_as_primary_charge: Drug Possession Arrests As Primary Charge
-  num_drug_poss_ex_marijuana_and_opioid: Drug Possession Arrests Ex Marijuana And Opioid
+  #num_drug_poss_as_primary_charge: Drug Possession Arrests As Primary Charge
+  #num_drug_poss_ex_marijuana_and_opioid: Drug Possession Arrests Ex Marijuana And Opioid
+  num_drug_poss_ex_marijuana_opioid_and_unknown_substances: Drug Possession Arrests Ex Marijuana, Opioid, Unknown
   #num_marijuana_related_arrests: Marijuana Related Arrests
   num_marijuana_poss: Marijuana Possession Arrests
   #num_opioid_related_arrests: Opioid Related Arrests
@@ -20,8 +21,9 @@ color_map: # These hex codes originate from the University of Chicago Crime Lab'
   #num_drug_related_arrests: "#3EB1C8"
   #num_drug_related_arrests_as_primary_charge: "#EAAA00"
   num_drug_poss: "#275D38"
-  num_drug_poss_as_primary_charge: "#007396"
-  num_drug_poss_ex_marijuana_and_opioid: "orange"
+  #num_drug_poss_as_primary_charge: "#007396"
+  #num_drug_poss_ex_marijuana_and_opioid: "orange"
+  num_drug_poss_ex_marijuana_opioid_and_unknown_substances: "#3EB1C8"
   #num_marijuana_related_arrests: "brown"
   num_marijuana_poss: "pink"
   #num_opioid_related_arrests: "#59315F"
@@ -36,8 +38,10 @@ expanded_query_params: # Each key should be an existing dbt model that has been 
       - arrest_district
       - arrest_address
       - home_address
-      - num_opioid_related_charges
+      - num_drug_poss_charges
+      - num_marijuana_poss_charges
       - num_opioid_poss_charges
+      - num_unknown_poss_charges
     row_filter:
       key: arrest_district
       values:
