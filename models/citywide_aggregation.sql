@@ -20,8 +20,13 @@ WITH citywide_arrests AS (
                         AND num_opioid_related_charges = 0) AS num_drug_related_arrests_ex_marijuana_and_opioid,
 
         COUNT(*) FILTER(WHERE num_drug_poss_charges > 0 
-                        AND num_marijuana_related_charges = 0
-                        AND num_opioid_related_charges = 0) AS num_drug_poss_ex_marijuana_and_opioid
+                        AND num_marijuana_poss_charges = 0
+                        AND num_opioid_poss_charges = 0) AS num_drug_poss_ex_marijuana_and_opioid,
+
+        COUNT(*) FILTER(WHERE num_drug_poss_charges > 0 
+                        AND num_marijuana_poss_charges = 0
+                        AND num_opioid_poss_charges = 0
+                        AND num_unknown_poss_charges = 0) AS num_drug_poss_ex_marijuana_opioid_and_unknown_substances
     FROM {{ ref('analytical_table') }}
     GROUP BY arrest_year
 )
