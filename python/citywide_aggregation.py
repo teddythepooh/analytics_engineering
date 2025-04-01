@@ -56,7 +56,7 @@ if __name__ == "__main__":
                         default = "./python/config.yml")
     
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
-    parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 65000)
+    parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 55000)
     parser.add_argument("--y_ticks", help = "y axis tick of plot", type = int, default = 5000)
     
     parser.add_argument("--output_dir", default = "output")

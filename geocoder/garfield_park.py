@@ -10,13 +10,21 @@ from utils import create_logger
 
 garfield_park = ["WEST GARFIELD PARK", "EAST GARFIELD PARK"]
 
-def plot_by_year(table: pd.DataFrame, column_map: dict, color_map: dict, 
+def plot_by_year(table: pd.DataFrame, 
+                 column_map: dict, 
+                 color_map: dict, 
+                 max_y: int,
+                 y_ticks: int,
                  year_col: str = "arrest_year",
                  title: str = "Drug Arrests in Garfield Park Over Time"):
     '''
     table: table to plot with a year column
     column_map: key:value pair where key is a column in table and value is the desired name in plot
     color_map: key:value pair where key is the value in column_map and value is the desired color in plot
+    max_y: maximum of y axis
+    y_ticks: y axis ticks
+    year_col: column in table that refers to the year
+    title: title of plot
     
     creates a multi-line plot, one line for each element in column_map
     '''
@@ -33,6 +41,7 @@ def plot_by_year(table: pd.DataFrame, column_map: dict, color_map: dict,
                  marker = "o", label = col, color = color_map[col])
     
     plt.title(title, fontsize = 15, fontweight = "bold")
+    plt.yticks(range(0, max_y + y_ticks, y_ticks))
     plt.xticks(range(min(summary_for_plot[year_col]), max(summary_for_plot[year_col]) + 1), rotation = 30)
     plt.legend(loc = "upper right", fontsize = 9)
     plt.tight_layout()
@@ -104,7 +113,8 @@ def main(args: argparse.Namespace):
     with open(args.config_file, "r") as file:
         config = yaml.safe_load(file)
 
-    plot_by_year(summary_for_plot, column_map = config["column_map"], color_map = config["color_map"])
+    plot_by_year(summary_for_plot, column_map = config["column_map"], color_map = config["color_map"],
+                 max_y = args.max_y, y_ticks = args.y_ticks)
     
     
     # Step 4: Export arrest-level table, year-level table, and year-level visualization.
@@ -132,6 +142,9 @@ if __name__ == "__main__":
         "table; and year-level visualization are exported."
     )
     parser.add_argument("--start_year", help = "beginning year of plot", type = int, required = False)
+
+    parser.add_argument("--max_y", help = "max y axis of plot", type = int, default = 4000)
+    parser.add_argument("--y_ticks", help = "y axis tick of plot", type = int, default = 400)
     
     parser.add_argument("--config_file",
                         help = ".yml file with column_map and color_map keys",
