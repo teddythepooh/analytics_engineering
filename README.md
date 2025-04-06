@@ -4,7 +4,9 @@
 2. `ul_geocoder`, the University of Chicago Crime Lab's internal geocoder
 
 ### About
-These data models aim to systematically increase granularity and monitor data integrity of 1.5 million index crimes and drug arrests in CPD Infra. Presently, this fulfills a data request from a substance abuse center in preparation for a quasi-experimental study: identify historical opioid possession arrests in Chicago at the citywide and community area levels (East and West Garfield Park). See `./models/schema.yml` for context on the models. Additionally, do `dbt docs generate --static` for the dbt documentation. Open the file in your browser, then click the blue icon on the lower right corner to visualize the underlying DAG.
+These data models aim to systematically increase granularity and monitor data integrity of 1.5 million index crimes and drug arrests in CPD Infra. Presently, this fulfills a data request from a substance abuse center in preparation for a quasi-experimental study: identify historical opioid possession arrests in Chicago at the citywide and community area levels (East and West Garfield Park). See `./models/schema.yml` for context on the models. Additionally, do `dbt docs generate --static` for the dbt documentation. Open the file in your browser, then click the blue icon on the lower right corner to visualize the underlying DAG as such:
+
+![](images/dbt_DAG.png)
 
 ### Instructions
 1. Declare your CNet ID and password as environment variables called `DBT_USER` and `DBT_PASSWORD`, respectively. 
