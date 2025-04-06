@@ -20,9 +20,8 @@ WITH charges AS (
         CASE WHEN
             lcc.fbi_code = '{{ var("drug_crime_fbi_code") }}'
         THEN 1 ELSE 0 END AS drug_related_crime_ind
-
-    FROM cleaned.living_charge lc
-    LEFT JOIN cleaned.living_charge_code lcc ON lc.charge_code_id = lcc.id
+    FROM {{ source('cpd_infra_tables', 'living_charge') }} lc
+    LEFT JOIN {{ source('cpd_infra_tables', 'living_charge_code') }} lcc ON lc.charge_code_id = lcc.id
 )
 SELECT * FROM charges
 WHERE 
