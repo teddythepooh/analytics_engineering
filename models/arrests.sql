@@ -27,8 +27,8 @@ WITH arrests AS (
 
         CASE WHEN la.fbi_code = '{{ var("drug_crime_fbi_code") }}'
         THEN 1 ELSE 0 END AS drug_related_crime_ind
-    FROM cleaned.living_arrest la
-    LEFT JOIN cleaned.living_charge_code lcc ON la.charge_code_id = lcc.id
+    FROM {{ source('cpd_infra_tables', 'living_arrest') }} la
+    LEFT JOIN {{ source('cpd_infra_tables', 'living_charge_code') }} lcc ON la.charge_code_id = lcc.id
 )
 SELECT * FROM arrests
 WHERE

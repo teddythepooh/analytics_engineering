@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: cpd_infra_tables
+    schema: cleaned
+    tables:
+      - name: living_arrest
+      - name: living_charge
+      - name: living_charge_code
